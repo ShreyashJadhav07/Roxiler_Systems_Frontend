@@ -31,7 +31,7 @@ function OwnerDashboard() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("dashboard");
   
-  // Password change states
+ 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
@@ -40,7 +40,7 @@ function OwnerDashboard() {
   });
   const [changingPassword, setChangingPassword] = useState(false);
 
-  // Ratings filter and sort states
+
   const [ratingsFilters, setRatingsFilters] = useState({
     search: "",
     sortBy: "createdAt",
@@ -50,7 +50,7 @@ function OwnerDashboard() {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
 
-  // Fetch dashboard data
+  
   useEffect(() => {
     fetchDashboardData();
   }, []);
@@ -71,13 +71,13 @@ function OwnerDashboard() {
     }
   };
 
-  // Handle logout
+ 
   const handleLogout = () => {
     logout();
     navigate("/");
   };
 
-  // Handle password change
+ 
   const handlePasswordChange = async () => {
     
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
@@ -116,11 +116,11 @@ function OwnerDashboard() {
     }
   };
 
-  // Filter and sort ratings
+  
   const getFilteredRatings = () => {
     let filtered = [...dashboardData.ratings];
 
-    // Search filter
+   
     if (ratingsFilters.search) {
       const searchTerm = ratingsFilters.search.toLowerCase();
       filtered = filtered.filter(rating => 
@@ -129,7 +129,7 @@ function OwnerDashboard() {
       );
     }
 
-    // Sort
+    
     filtered.sort((a, b) => {
       let aVal, bVal;
       
@@ -159,7 +159,7 @@ function OwnerDashboard() {
     return filtered;
   };
 
-  // Toggle sort order
+  
   const toggleSort = (field) => {
     setRatingsFilters(prev => ({
       ...prev,
@@ -234,9 +234,9 @@ function OwnerDashboard() {
             <TabsTrigger value="ratings" className="cursor-pointer">Customer Ratings</TabsTrigger>
           </TabsList>
 
-          {/* Dashboard Tab */}
+        
           <TabsContent value="dashboard">
-            {/* Store Overview Cards */}
+           
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -287,7 +287,7 @@ function OwnerDashboard() {
               </Card>
             </div>
 
-            {/* Store Information */}
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
@@ -347,7 +347,7 @@ function OwnerDashboard() {
             </div>
           </TabsContent>
 
-          {/* Ratings Tab */}
+        
           <TabsContent value="ratings">
             <Card>
               <CardHeader>
@@ -355,7 +355,7 @@ function OwnerDashboard() {
                 <CardDescription>All ratings submitted for your store</CardDescription>
               </CardHeader>
               <CardContent>
-                {/* Filters */}
+                
                 <div className="flex gap-4 mb-6">
                   <Input
                     placeholder="Search by customer name or email..."
@@ -365,7 +365,7 @@ function OwnerDashboard() {
                   />
                 </div>
 
-                {/* Ratings Table */}
+               
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse border border-gray-300">
                     <thead>
@@ -441,7 +441,7 @@ function OwnerDashboard() {
         </Tabs>
       </div>
 
-      {/* Change Password Modal */}
+     
       {showPasswordModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
