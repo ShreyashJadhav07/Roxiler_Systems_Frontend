@@ -753,7 +753,7 @@ function AdminDashboard() {
     sortOrder: "asc"
   });
 
-  // Add user modal state
+  
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [showAddStoreModal, setShowAddStoreModal] = useState(false);
   const [addUserForm, setAddUserForm] = useState({
@@ -1004,7 +1004,7 @@ function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -1012,7 +1012,7 @@ function AdminDashboard() {
             <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
             <p className="text-gray-600">Welcome back, {user?.name}</p>
           </div>
-          <Button onClick={handleLogout} variant="outline">
+          <Button onClick={handleLogout} variant="outline" className="cursor-pointer">
             <LogOut className="w-4 h-4 mr-2" />
             Logout
           </Button>
@@ -1020,13 +1020,13 @@ function AdminDashboard() {
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="mb-6">
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="users">Users</TabsTrigger>
-            <TabsTrigger value="stores">Stores</TabsTrigger>
+            <TabsTrigger value="dashboard"  className="cursor-pointer">Dashboard</TabsTrigger>
+            <TabsTrigger value="users"  className="cursor-pointer">Users</TabsTrigger>
+            <TabsTrigger value="stores"  className="cursor-pointer">Stores</TabsTrigger>
           </TabsList>
 
           {/* Dashboard Tab */}
-          <TabsContent value="dashboard">
+          <TabsContent value="dashboard" className="cursor-pointer">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -1076,11 +1076,11 @@ function AdminDashboard() {
                   <CardDescription>Add new users and stores</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <Button onClick={() => setShowAddUserModal(true)} className="w-full">
+                  <Button onClick={() => setShowAddUserModal(true)} className="w-full cursor-pointer">
                     <Plus className="w-4 h-4 mr-2" />
                     Add New User
                   </Button>
-                  <Button onClick={() => setShowAddStoreModal(true)} className="w-full" variant="outline">
+                  <Button onClick={() => setShowAddStoreModal(true)} className="w-full cursor-pointer" variant="outline">
                     <Plus className="w-4 h-4 mr-2" />
                     Add New Store
                   </Button>

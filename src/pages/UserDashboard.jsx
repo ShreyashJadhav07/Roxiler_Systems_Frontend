@@ -28,14 +28,14 @@ function UserDashboard() {
   const [activeTab, setActiveTab] = useState("stores");
   const [searchTerm, setSearchTerm] = useState("");
   
-  // Rating modal state
+ 
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [selectedStore, setSelectedStore] = useState(null);
   const [ratingValue, setRatingValue] = useState(0);
   const [submittingRating, setSubmittingRating] = useState(false);
   const [isEditingRating, setIsEditingRating] = useState(false);
 
-  // Password change state
+ 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
@@ -47,7 +47,7 @@ function UserDashboard() {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
 
-  // Fetch stores and user ratings
+
   useEffect(() => {
     fetchStoresAndRatings();
   }, []);
@@ -62,7 +62,7 @@ function UserDashboard() {
 
       setStores(storesRes.data.data || storesRes.data.stores || []);
       
-      // Convert ratings array to object for easier lookup
+      
       const ratingsData = ratingsRes.data.data || ratingsRes.data.ratings || [];
       const ratingsMap = {};
       ratingsData.forEach(rating => {
@@ -77,13 +77,15 @@ function UserDashboard() {
     }
   };
 
-  // Handle logout
+
   const handleLogout = () => {
     logout();
+    toast.success("Logged out successfully");
     navigate("/");
+
   };
 
-  // Filter stores based on search
+
   const getFilteredStores = () => {
     if (!searchTerm) return stores;
     
@@ -94,7 +96,6 @@ function UserDashboard() {
     );
   };
 
-  // Open rating modal
   const openRatingModal = (store) => {
     setSelectedStore(store);
     const existingRating = userRatings[store._id || store.id];
@@ -103,7 +104,7 @@ function UserDashboard() {
     setShowRatingModal(true);
   };
 
-  // Submit or update rating
+ 
   const handleSubmitRating = async () => {
     if (!selectedStore || ratingValue === 0) {
       toast.error("Please select a rating");
@@ -125,13 +126,13 @@ function UserDashboard() {
 
       toast.success(isEditingRating ? "Rating updated successfully!" : "Rating submitted successfully!");
       
-      // Update local state
+     
       setUserRatings(prev => ({
         ...prev,
         [selectedStore._id || selectedStore.id]: ratingValue
       }));
 
-      // Refresh stores to get updated average ratings
+    
       fetchStoresAndRatings();
       
       setShowRatingModal(false);
@@ -145,7 +146,7 @@ function UserDashboard() {
     }
   };
 
-  // Change password
+
   const handleChangePassword = async (e) => {
     e.preventDefault();
     
@@ -181,7 +182,7 @@ function UserDashboard() {
     }
   };
 
-  // Render star rating
+
   const renderStars = (rating, interactive = false, onStarClick = null) => {
     return (
       <div className="flex gap-1">
@@ -218,130 +219,156 @@ function UserDashboard() {
             <p className="text-gray-600">Welcome back, {user?.name}</p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => setShowPasswordModal(true)} variant="outline">
+            <Button onClick={() => setShowPasswordModal(true)} variant="outline" className="cursor-pointer">
               <Lock className="w-4 h-4 mr-2" />
               Change Password
             </Button>
-            <Button onClick={handleLogout} variant="outline">
-              <LogOut className="w-4 h-4 mr-2" />
+            <Button onClick={handleLogout} variant="outline" className="cursor-pointer">
+              <LogOut className="w-4 h-4 mr-2 " />
               Logout
             </Button>
           </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="mb-6">
-            <TabsTrigger value="stores">Stores</TabsTrigger>
-            <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsList className="mb-6 cursor-pointer">
+            <TabsTrigger value="stores" className=" cursor-pointer">Stores</TabsTrigger>
+            <TabsTrigger value="profile" className=" cursor-pointer">Profile</TabsTrigger>
           </TabsList>
 
-          {/* Stores Tab */}
-          <TabsContent value="stores">
-            <Card>
-              <CardHeader>
-                <div className="flex justify-between items-center">
+        
+ <TabsContent value="stores">
+  <Card className="rounded-3xl shadow-lg border border-gray-100">
+    <CardHeader className="pb-4">
+      <div className="flex justify-between items-center">
+        <div>
+          <CardTitle className="text-2xl font-bold text-gray-800">
+            Available Stores
+          </CardTitle>
+          <CardDescription className="text-gray-600">
+            Browse and rate stores in your area
+          </CardDescription>
+        </div>
+      </div>
+    </CardHeader>
+
+    <CardContent>
+      {/* Search Bar */}
+      <div className="flex gap-4 mb-8">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <Input
+            placeholder="Search stores by name or address..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 rounded-xl border-gray-200 focus:ring-2 focus:ring-purple-500"
+          />
+        </div>
+      </div>
+
+      {/* Stores Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+        {getFilteredStores().map((store) => {
+          const userRating = userRatings[store._id || store.id];
+          return (
+            <Card
+              key={store._id || store.id}
+              className="flex flex-col h-full rounded-2xl border border-gray-100 hover:shadow-xl transition-all duration-200"
+            >
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
                   <div>
-                    <CardTitle>Available Stores</CardTitle>
-                    <CardDescription>Browse and rate stores in your area</CardDescription>
+                    <CardTitle className="text-lg font-semibold text-gray-800 line-clamp-1">
+                      {store.name}
+                    </CardTitle>
+                    <div className="flex items-center gap-1 text-sm text-gray-600 mt-1">
+                      <MapPin className="w-4 h-4 text-gray-400" />
+                      <span className="line-clamp-1">{store.address}</span>
+                    </div>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
-                {/* Search */}
-                <div className="flex gap-4 mb-6">
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input
-                      placeholder="Search stores by name or address..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
-                    />
+
+              <CardContent className="flex flex-col justify-between flex-grow space-y-5">
+                {/* Overall Rating */}
+                <div>
+                  <p className="text-sm font-medium mb-2 text-gray-700">
+                    Overall Rating
+                  </p>
+                  <div className="flex items-center gap-2">
+                    {renderStars(store.averageRating || 0)}
+                    <span className="text-sm text-gray-600">
+                      {store.averageRating
+                        ? store.averageRating.toFixed(1)
+                        : "No ratings"}
+                    </span>
                   </div>
                 </div>
 
-                {/* Stores Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {getFilteredStores().map((store) => {
-                    const userRating = userRatings[store._id || store.id];
-                    return (
-                      <Card key={store._id || store.id} className="hover:shadow-lg transition-shadow">
-                        <CardHeader>
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <CardTitle className="text-lg">{store.name}</CardTitle>
-                              <div className="flex items-center gap-1 text-sm text-gray-600 mt-1">
-                                <MapPin className="w-4 h-4" />
-                                {store.address}
-                              </div>
-                            </div>
-                            <Store className="w-6 h-6 text-gray-400" />
-                          </div>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-4">
-                            {/* Overall Rating */}
-                            <div>
-                              <p className="text-sm font-medium mb-2">Overall Rating</p>
-                              <div className="flex items-center gap-2">
-                                {renderStars(store.averageRating || 0)}
-                                <span className="text-sm text-gray-600">
-                                  {store.averageRating ? store.averageRating.toFixed(1) : "No ratings"}
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* User's Rating */}
-                            {userRating && (
-                              <div>
-                                <p className="text-sm font-medium mb-2">Your Rating</p>
-                                <div className="flex items-center gap-2">
-                                  {renderStars(userRating)}
-                                  <Badge variant="secondary">{userRating}/5</Badge>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Rating Action */}
-                            <Button 
-                              onClick={() => openRatingModal(store)}
-                              variant={userRating ? "outline" : "default"}
-                              size="sm"
-                              className="w-full"
-                            >
-                              {userRating ? (
-                                <>
-                                  <Edit3 className="w-4 h-4 mr-2" />
-                                  Update Rating
-                                </>
-                              ) : (
-                                <>
-                                  <Plus className="w-4 h-4 mr-2" />
-                                  Rate Store
-                                </>
-                              )}
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-
-                {getFilteredStores().length === 0 && (
-                  <div className="text-center py-12">
-                    <Store className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No stores found</h3>
-                    <p className="text-gray-600">
-                      {searchTerm ? "Try adjusting your search terms." : "No stores are currently available."}
+                {/* User Rating */}
+                {userRating && (
+                  <div>
+                    <p className="text-sm font-medium mb-2 text-gray-700">
+                      Your Rating
                     </p>
+                    <div className="flex items-center gap-2">
+                      {renderStars(userRating)}
+                      <Badge
+                        variant="secondary"
+                        className="rounded-full px-3 py-0.5"
+                      >
+                        {userRating}/5
+                      </Badge>
+                    </div>
                   </div>
                 )}
+
+                {/* Action Button */}
+                <Button
+                  onClick={() => openRatingModal(store)}
+                  variant={userRating ? "outline" : "default"}
+                  size="sm"
+                  className="w-full mt-auto rounded-xl font-medium transition-all duration-200 hover:scale-[1.02]"
+                >
+                  {userRating ? (
+                    <>
+                      <Edit3 className="w-4 h-4 mr-2" />
+                      Update Rating
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Rate Store
+                    </>
+                  )}
+                </Button>
               </CardContent>
             </Card>
-          </TabsContent>
+          );
+        })}
+      </div>
 
-          {/* Profile Tab */}
+      {/* Empty State */}
+      {getFilteredStores().length === 0 && (
+        <div className="text-center py-16">
+          <Store className="w-14 h-14 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            No stores found
+          </h3>
+          <p className="text-gray-600">
+            {searchTerm
+              ? "Try adjusting your search terms."
+              : "No stores are currently available."}
+          </p>
+        </div>
+      )}
+    </CardContent>
+  </Card>
+</TabsContent>
+
+
+
+         
           <TabsContent value="profile">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
@@ -358,13 +385,10 @@ function UserDashboard() {
                     <label className="text-sm font-medium text-gray-700">Email</label>
                     <p className="text-gray-900">{user?.email}</p>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Address</label>
-                    <p className="text-gray-900">{user?.address}</p>
-                  </div>
+                 
                   <div>
                     <label className="text-sm font-medium text-gray-700">Role</label>
-                    <Badge variant="default">{user?.role}</Badge>
+                    <Badge variant="default" className="ml-5">{user?.role}</Badge>
                   </div>
                 </CardContent>
               </Card>
@@ -391,7 +415,7 @@ function UserDashboard() {
         </Tabs>
       </div>
 
-      {/* Rating Modal */}
+     
       {showRatingModal && selectedStore && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -447,64 +471,89 @@ function UserDashboard() {
         </div>
       )}
 
-      {/* Password Change Modal */}
+   
       {showPasswordModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold mb-4">Change Password</h3>
-            <form onSubmit={handleChangePassword} className="space-y-4">
-              <Input
-                type="password"
-                placeholder="Current Password"
-                value={passwordForm.currentPassword}
-                onChange={(e) => setPasswordForm({...passwordForm, currentPassword: e.target.value})}
-                required
-              />
-              <Input
-                type="password"
-                placeholder="New Password"
-                value={passwordForm.newPassword}
-                onChange={(e) => setPasswordForm({...passwordForm, newPassword: e.target.value})}
-                required
-              />
-              <Input
-                type="password"
-                placeholder="Confirm New Password"
-                value={passwordForm.confirmPassword}
-                onChange={(e) => setPasswordForm({...passwordForm, confirmPassword: e.target.value})}
-                required
-              />
-              
-              <div className="flex gap-2">
-                <Button type="submit" disabled={changingPassword} className="flex-1">
-                  {changingPassword ? (
-                    <>
-                      <LucideLoader2 className="animate-spin w-4 h-4 mr-2" />
-                      Changing...
-                    </>
-                  ) : (
-                    "Change Password"
-                  )}
-                </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => {
-                    setShowPasswordModal(false);
-                    setPasswordForm({
-                      currentPassword: "",
-                      newPassword: "",
-                      confirmPassword: ""
-                    });
-                  }}
-                  disabled={changingPassword}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <div className="fixed inset-0 bg-white bg-opacity-40 flex items-center justify-center z-50">
+           <div className="w-full max-w-lg bg-white rounded-3xl shadow-xl p-8">
+                   <div className="text-center mb-6">
+            <h2 className="text-2xl font-semibold text-gray-800">Change Password</h2>
+      <p className="text-gray-600 mt-1">Enter your details to update your password</p>
+    </div>
+
+    <form onSubmit={handleChangePassword} className="space-y-4">
+      <Input
+        type="password"
+        placeholder="Current Password"
+        value={passwordForm.currentPassword}
+        onChange={(e) =>
+          setPasswordForm({
+            ...passwordForm,
+            currentPassword: e.target.value,
+          })
+        }
+        required
+      />
+      <Input
+        type="password"
+        placeholder="New Password"
+        value={passwordForm.newPassword}
+        onChange={(e) =>
+          setPasswordForm({
+            ...passwordForm,
+            newPassword: e.target.value,
+          })
+        }
+        required
+      />
+      <Input
+        type="password"
+        placeholder="Confirm New Password"
+        value={passwordForm.confirmPassword}
+        onChange={(e) =>
+          setPasswordForm({
+            ...passwordForm,
+            confirmPassword: e.target.value,
+          })
+        }
+        required
+      />
+
+      <div className="flex gap-2 pt-2">
+        <Button
+          type="submit"
+          disabled={changingPassword}
+          className="flex-1 bg-gradient-to-r from-purple-600 to-pink-500 cursor-pointer"
+        >
+          {changingPassword ? (
+            <>
+              <LucideLoader2 className="animate-spin w-4 h-4 mr-2" />
+              Changing...
+            </>
+          ) : (
+            "Change Password"
+          )}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="cursor-pointer"
+          onClick={() => {
+            setShowPasswordModal(false);
+            setPasswordForm({
+              currentPassword: "",
+              newPassword: "",
+              confirmPassword: "",
+            });
+          }}
+          disabled={changingPassword}
+        >
+          Cancel
+        </Button>
+      </div>
+    </form>
+  </div>
+</div>
+
       )}
     </div>
   );

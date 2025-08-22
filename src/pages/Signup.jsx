@@ -61,7 +61,7 @@ if (form.address.length < 10 || form.address.length > 400) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Client-side validation
+   
     if (!validateForm()) return;
 
     setLoading(true);
@@ -146,7 +146,7 @@ if (form.address.length < 10 || form.address.length > 400) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Full Name */}
+          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Full Name
@@ -160,7 +160,7 @@ if (form.address.length < 10 || form.address.length > 400) {
             />
           </div>
 
-          {/* Email */}
+         
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -189,7 +189,7 @@ if (form.address.length < 10 || form.address.length > 400) {
             />
           </div>
 
-          {/* Password */}
+         
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
@@ -204,7 +204,7 @@ if (form.address.length < 10 || form.address.length > 400) {
             />
           </div>
 
-          {/* Role */}
+         
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Role (Current: {form.role})
