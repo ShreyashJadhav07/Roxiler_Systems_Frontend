@@ -210,7 +210,7 @@ function UserDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -366,9 +366,6 @@ function UserDashboard() {
   </Card>
 </TabsContent>
 
-
-
-         
           <TabsContent value="profile">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
@@ -418,8 +415,8 @@ function UserDashboard() {
      
       {showRatingModal && selectedStore && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-semibold mb-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md cursor-pointer">
+            <h3 className="text-lg font-semibold mb-4 cursor-pointer">
               {isEditingRating ? "Update Rating" : "Rate Store"}
             </h3>
             <div className="space-y-4">
