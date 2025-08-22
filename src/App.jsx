@@ -38,6 +38,7 @@ function App() {
             </PrivateRoute>
           }
         />
+          <Route path="*" element={<h2>Page Not Found</h2>} />
       </Routes>
     </Router>
   );

@@ -1,7 +1,6 @@
 import { createContext, useState, useContext } from "react";
 import axiosInstance from "../api/axios";
 
-
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -14,10 +13,31 @@ export const AuthProvider = ({ children }) => {
     return res.data;
   };
 
-  // Signup function
-  const signup = async (name, email, address, password) => {
-    const res = await axiosInstance.post("/api/auth/signup", { name, email, address, password });
-    return res.data;
+  // Signup function with better debugging
+  const signup = async (name, email, address, password, role) => {
+    console.log("AuthContext - Signup called with:", { 
+      name, 
+      email, 
+      address, 
+      password: "***hidden***", 
+      role 
+    });
+
+    try {
+      const requestData = { name, email, address, password, role };
+      console.log("AuthContext - Request data:", requestData);
+      
+      const res = await axiosInstance.post("/api/auth/signup", requestData);
+      
+      console.log("AuthContext - Response:", res);
+      console.log("AuthContext - Response data:", res.data);
+      
+      return res.data;
+    } catch (error) {
+      console.error("AuthContext - Signup error:", error);
+      console.error("AuthContext - Error response:", error.response?.data);
+      throw error;
+    }
   };
 
   // Logout function

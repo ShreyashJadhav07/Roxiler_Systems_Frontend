@@ -15,7 +15,6 @@ function Login() {
   const { login } = useAuth();
 
   const onSubmit = async (e) => {
-    // Prevent default if this is called from a form submission
     if (e) e.preventDefault();
 
     try {
@@ -30,20 +29,12 @@ function Login() {
       }
 
       setLoading(true);
-      console.log("Attempting login with:", { email }); // Debug log (don't log password)
-      
       const res = await login(email, password);
-      console.log("Login response:", res); // Debug log
 
-      // Check if login was successful
       if (res && (res.status === "success" || res.success || res.user)) {
         toast.success("Logged in successfully!");
-
-        // Access user role more safely
         const role = res.user?.role || res.data?.user?.role;
-        console.log("User role:", role); // Debug log
 
-        // Navigate based on role with a small delay to show toast
         setTimeout(() => {
           if (role === "admin") {
             navigate("/admin/dashboard");
@@ -54,12 +45,11 @@ function Login() {
           }
         }, 1000);
       } else {
-        // Handle unexpected response format
         toast.error("Login failed - unexpected response format");
         console.log("Unexpected login response:", res);
       }
     } catch (err) {
-      console.error("Login error:", err); // Debug log
+      console.error("Login error:", err);
       const errorMessage = err.response?.data?.message || err.message || "Login failed";
       toast.error(errorMessage);
     } finally {
@@ -67,7 +57,6 @@ function Login() {
     }
   };
 
-  // Handle Enter key press
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       onSubmit();
@@ -75,35 +64,34 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f4f4] flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800">Login</h2>
-          <p className="text-gray-600 mt-1">
-            Enter your credentials to continue.
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl p-10 transition-all duration-300 hover:shadow-3xl">
+        <div className="text-center mb-8">
+          <h2 className="text-4xl font-bold text-gray-900 tracking-tight">Welcome Back</h2>
+          <p className="text-lg text-gray-500 mt-2">
+            Sign in to access your account
           </p>
         </div>
-        
-        {/* Wrap inputs in a form for better accessibility and Enter key handling */}
-        <form onSubmit={onSubmit} className="space-y-4">
+
+        <form onSubmit={onSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+            <label htmlFor="email" className="block text-base font-semibold text-gray-800 mb-2">
+              Email Address
             </label>
             <Input
               id="email"
               type="email"
-              placeholder="m@example.com"
+              placeholder="your@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="mt-1 text-black"
+              className="mt-1 text-lg text-gray-900 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all h-12"
               required
               disabled={loading}
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="block text-base font-semibold text-gray-800 mb-2">
               Password
             </label>
             <Input
@@ -113,34 +101,34 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="mt-1 text-black"
+              className="mt-1 text-lg text-gray-900 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all h-12"
               required
               disabled={loading}
             />
           </div>
           <Button
             type="submit"
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold py-2 rounded-full hover:opacity-90 transition cursor-pointer"
+            className="w-full bg-gradient-to-r from-purple-700 to-pink-600 text-white text-lg font-bold py-3 rounded-lg hover:from-purple-800 hover:to-pink-700 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             disabled={loading || !email || !password}
           >
             {loading ? (
-              <>
+              <div className="flex items-center justify-center">
                 Signing in...
-                <LucideLoader2 className="animate-spin ml-2 w-4 h-4" />
-              </>
+                <LucideLoader2 className="animate-spin ml-3 w-5 h-5" />
+              </div>
             ) : (
-              "Sign in"
+              "Sign In"
             )}
           </Button>
         </form>
-        
-        <div className="mt-6 flex justify-between text-sm text-gray-600">
-          <a href="#" className="hover:underline">Forgot Password?</a>
+
+        <div className="mt-8 flex justify-center text-base text-gray-600">
+          
           <div>
             Need an account?{" "}
-            <button 
+            <button
               onClick={() => navigate("/signup")}
-              className="underline font-medium text-purple-600 hover:text-purple-700"
+              className="font-medium text-purple-600 hover:text-purple-700 underline transition-colors cursor-pointer"
               disabled={loading}
             >
               Sign Up
